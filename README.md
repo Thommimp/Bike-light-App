@@ -26,4 +26,4 @@ The app connects to the Smart Bike Light via Bluetooth Low Energy (BLE) and lets
 
 1. Clone the repo:
    ```bash
-   git clone https://gitlab.gbar.dtu.dk/s232440/bikelight-ios-app.git
+   git clone https://github.com/Thommimp/Bike-light-App.git
