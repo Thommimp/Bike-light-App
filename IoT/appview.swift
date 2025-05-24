@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AppView: View {
     @State private var savedBikes: [String] = UserDefaults.standard.stringArray(forKey: "savedBikes") ?? []
-    @State private var selectedBike: String = UserDefaults.standard.string(forKey: "selectedBike") ?? ""
+    @AppStorage("selectedBike") private var selectedBike: String = ""
 
     var body: some View {
         if savedBikes.isEmpty {

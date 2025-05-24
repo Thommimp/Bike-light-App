@@ -3,7 +3,7 @@ import Foundation
 
 struct DeviceData: Codable {
     let device_id: String
-    let battery_level: Int
+    let battery_level: Double
     let mode: String
     let latitude: Double
     let longitude: Double
@@ -44,13 +44,47 @@ class AzureAPI {
 
     static func getDeviceData(deviceId: String, completion: @escaping (DeviceData?) -> Void) {
         let urlString = "\(baseURL)/devices/\(deviceId)?code=\(authCode)"
-        guard let url = URL(string: urlString) else { return completion(nil) }
-
-        URLSession.shared.dataTask(with: url) { data, _, _ in
-            if let data = data {
-                let deviceData = try? JSONDecoder().decode(DeviceData.self, from: data)
+        guard let url = URL(string: urlString) else {
+            print("Invalid URL: \(urlString)")
+            return completion(nil)
+        }
+        
+        print("Fetching from URL: \(urlString)")
+        
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            if let error = error {
+                print("Network error: \(error.localizedDescription)")
+                completion(nil)
+                return
+            }
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                print("Invalid response type")
+                completion(nil)
+                return
+            }
+            
+            print("Response status code: \(httpResponse.statusCode)")
+            
+            guard httpResponse.statusCode == 200 else {
+                print("Server returned error code: \(httpResponse.statusCode)")
+                completion(nil)
+                return
+            }
+            
+            guard let data = data else {
+                print("No data received")
+                completion(nil)
+                return
+            }
+            
+            print("Data received: \(String(data: data, encoding: .utf8) ?? "Could not convert to string")")
+            
+            do {
+                let deviceData = try JSONDecoder().decode(DeviceData.self, from: data)
                 completion(deviceData)
-            } else {
+            } catch {
+                print("JSON Decoding error: \(error)")
                 completion(nil)
             }
         }.resume()

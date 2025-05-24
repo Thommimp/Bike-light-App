@@ -7,7 +7,7 @@
 
 import CoreBluetooth
 import SwiftUI
-
+    
 // Define a struct to represent a peripheral item.
 struct PeripheralItem: Identifiable {
     let id = UUID() // Make sure the peripheral item is identifiable
@@ -92,10 +92,7 @@ struct BLEListView: View {
             .onAppear {
                 // Start scanning when the view appears
                 bleManager.centralManager.scanForPeripherals(withServices: [BLEConstants.serviceUUID], options: nil)
-                if !savedBikes.contains("bike-light-001") {
-                        savedBikes.append("bike-light-001")
-                        UserDefaults.standard.set(savedBikes, forKey: "savedBikes")
-                    }
+          
             }
             .overlay(
                 Group {

@@ -11,7 +11,6 @@ import CoreLocation
 
 struct ContentView: View {
     // Bike's fixed location
-    let batteri_procentage = 50 // Example battery percentage
     @State private var cityName: String = "Loading..." // Store the city name
 
     
@@ -160,6 +159,7 @@ struct ContentView: View {
             .refreshable {
                 fetchBikeData()
                 getCityName(from: bikeCoordinates)
+                print(selectedBike)
             }
             .onAppear {
                 fetchBikeData() // Fetch bike data when the view appears
@@ -192,11 +192,11 @@ private func getCityName(from coordinates: CLLocationCoordinate2D) {
 
         AzureAPI.getDeviceData(deviceId: selectedBike) { deviceData in
             if let deviceData = deviceData {
-                print("Raw timestamp string: \(deviceData.timestamp)")
+             //   print("Raw timestamp string: \(deviceData.timestamp)")
 
                 // Update all variables with the fetched data
                 deviceId = deviceData.device_id
-                batteryLevel = deviceData.battery_level
+                batteryLevel = Int(round(deviceData.battery_level))
                 mode = deviceData.mode
                 latitude = deviceData.latitude
                 longitude = deviceData.longitude
@@ -214,6 +214,7 @@ private func getCityName(from coordinates: CLLocationCoordinate2D) {
                 bikeCoordinates = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
 
             } else {
+                print("error");
                 errorMessage = "Failed to fetch data for \(selectedBike)"
             }
         }
